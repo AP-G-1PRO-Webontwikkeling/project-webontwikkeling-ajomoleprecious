@@ -1,5 +1,4 @@
 import * as readline from 'readline-sync';
-import pokemonsFromJson from '../Pokemon.json';
 import { Pokemon } from './pokemon';
 import { Move } from './move';
 
@@ -13,7 +12,6 @@ const fetchFromUrl = async () => {
     const data = await response.json();
     showSubMenu(data);
 }
-
 
 function FilterPokemonsById(pokemons: Pokemon[]) {
     const pokemonId = readline.questionInt("Enter the id of the pokemon: ");
@@ -48,7 +46,6 @@ function ShowAllPokemons(pokemons: Pokemon[]) {
 }
 
 async function showSubMenu(data: Pokemon[]) {
-    const pokemons: Pokemon[] = data;
     let subMenuOption = readline.keyInSelect(menuOptions,
         "Welcome to the Pokémon JSON data viewer. Choose an option: ",
         { cancel: false, guide: false });
@@ -56,10 +53,10 @@ async function showSubMenu(data: Pokemon[]) {
     while (subMenuOption !== 2) {
         switch (subMenuOption) {
             case 0:
-                ShowAllPokemons(pokemons);
+                ShowAllPokemons(data);
                 break;
             case 1:
-                FilterPokemonsById(pokemons);
+                FilterPokemonsById(data);
                 break;
             default:
                 console.log("Please choose a valid option.");

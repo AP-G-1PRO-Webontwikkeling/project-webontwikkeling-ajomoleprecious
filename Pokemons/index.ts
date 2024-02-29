@@ -11,11 +11,7 @@ const menuOptions: string[] = [
 const fetchFromUrl = async () => {
     const response = await fetch('https://raw.githubusercontent.com/AP-G-1PRO-Webontwikkeling/project-webontwikkeling-ajomoleprecious/main/Pokemon.json');
     const data = await response.json();
-    return data;
-}
-
-const fetchFromFile = async () => {
-    return pokemonsFromJson;
+    showSubMenu(data);
 }
 
 
@@ -51,7 +47,7 @@ function ShowAllPokemons(pokemons: Pokemon[]) {
     });
 }
 
-function showSubMenu(data: Pokemon[]) {
+async function showSubMenu(data: Pokemon[]) {
     const pokemons: Pokemon[] = data;
     let subMenuOption = readline.keyInSelect(menuOptions,
         "Welcome to the Pokémon JSON data viewer. Choose an option: ",
@@ -76,9 +72,4 @@ function showSubMenu(data: Pokemon[]) {
 
 }
 
-
-
-Promise.race([fetchFromUrl(), fetchFromFile()]).then(data => {
-    showSubMenu(data);
-});
-
+fetchFromUrl();

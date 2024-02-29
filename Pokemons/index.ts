@@ -8,9 +8,9 @@ const menuOptions: string[] = [
     "3. Exit"];
 
 const fetchFromUrl = async () => {
-    const response = await fetch('https://raw.githubusercontent.com/AP-G-1PRO-Webontwikkeling/project-webontwikkeling-ajomoleprecious/main/Pokemon.json');
-    const data = await response.json();
-    showSubMenu(data);
+    const response = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemons.json');
+    const data = await response.json().catch(err => console.error(`Iets ging mis:\n ${err}`));
+    showSubMenu(data as Pokemon[]);
 }
 
 function FilterPokemonsById(pokemons: Pokemon[]) {

@@ -1,4 +1,3 @@
-import { Ability } from './ability';
 import { Move } from './move';
 
 export interface Pokemon {
@@ -10,6 +9,6 @@ export interface Pokemon {
     pokemon_birthdate: Date;
     pokemon_url: string;
     pokemon_type: string;
-    pokemon_abilities: Ability[];
+    pokemon_abilities: string[];
     pokemon_moves: Move[];
 }

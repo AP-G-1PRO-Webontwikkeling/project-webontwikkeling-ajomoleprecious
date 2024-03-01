@@ -18,21 +18,29 @@ function FilterPokemonsById(pokemons: Pokemon[]) {
     const pokemon = pokemons.find(pokemon => pokemon.pokemon_id === pokemonId);
     if (pokemon) {
         console.log(`\n${'-'.repeat(125)}`);
-        console.log(`${pokemon.pokemon_name} (${pokemon.pokemon_id})`);
-        console.log(` - Pokemon Phrase: ${pokemon.pokemon_phrase}`);
-        console.log(` - Pokemon Weight: ${pokemon.pokemon_weight}`);
-        console.log(` - Is Pokemon Active: ${pokemon.is_pokemon_active ? "Yes" : "No"}`);
-        console.log(` - Pokemon Birthdate: ${pokemon.pokemon_birthdate}`);
-        console.log(` - Pokemon Image: ${pokemon.pokemon_url}`);
-        console.log(` - Pokemon Type: ${pokemon.pokemon_type}`);
-        console.log(` - Pokemon Abilities: ${pokemon.pokemon_abilities.map(ability => ability.ability).join(", ")}`);
-        console.log(` - Pokemon Moves: ${showMoves(pokemon.pokemon_moves)}`);
+        console.log(`${pokemon.pokemon_name} (${pokemon.pokemon_id})\n
+        - Pokemon Phrase: ${pokemon.pokemon_phrase}\n
+        - Pokemon Weight: ${pokemon.pokemon_weight}\n
+        - Is Pokemon Active: ${pokemon.is_pokemon_active ? "Yes" : "No"}\n
+        - Pokemon Birthdate: ${pokemon.pokemon_birthdate}\n
+        - Pokemon Image: ${pokemon.pokemon_url}\n
+        - Pokemon Type: ${pokemon.pokemon_type}\n
+        - Pokemon Abilities: ${showAbilities(pokemon.pokemon_abilities)}\n
+        - Pokemon Moves: ${showMoves(pokemon.pokemon_moves)}\n`);
         console.log(`${'-'.repeat(125)}\n`);
     } else {
         console.log(`\n${'-'.repeat(50)}`);
         console.log("Pokemon not found");
         console.log(`${'-'.repeat(50)}\n`);
     }
+}
+
+function showAbilities(abilities: string[]) {
+    let abilityString = "";
+    for (let i = 0; i < abilities.length; i++) {
+        abilityString += `${abilities[i]}${i === abilities.length - 1 ? "" : ", "}`;
+    }
+    return abilityString;
 }
 
 function showMoves(moves: Move[]) {

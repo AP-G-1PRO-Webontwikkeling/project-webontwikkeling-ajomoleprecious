@@ -3,9 +3,9 @@ import { Pokemon } from './pokemon';
 import { Move } from './move';
 
 const menuOptions: string[] = [
-    "1. Show all Pokemons",
-    "2. Filter Pokemons by id",
-    "3. Exit"];
+    "Show all Pokemons",
+    "Filter Pokemons by id",
+    "Exit"];
 
 const fetchFromUrl = async () => {
     const response = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemons.json');
@@ -45,21 +45,17 @@ function ShowAllPokemons(pokemons: Pokemon[]) {
     });
 }
 
-async function showSubMenu(data: Pokemon[]) {
+function showSubMenu(pokemons: Pokemon[]) {
     let subMenuOption = readline.keyInSelect(menuOptions,
-        "Welcome to the Pokémon JSON data viewer. Choose an option: ",
-        { cancel: false, guide: false });
+        "Welcome to the Pokémon JSON data viewer. Choose an option: ",{ cancel: false, guide: false });
 
     while (subMenuOption !== 2) {
         switch (subMenuOption) {
             case 0:
-                ShowAllPokemons(data);
+                ShowAllPokemons(pokemons);
                 break;
             case 1:
-                FilterPokemonsById(data);
-                break;
-            default:
-                console.log("Please choose a valid option.");
+                FilterPokemonsById(pokemons);
                 break;
         }
         subMenuOption = readline.keyInSelect(menuOptions,

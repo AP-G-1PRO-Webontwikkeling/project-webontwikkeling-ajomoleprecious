@@ -46,10 +46,11 @@ function ShowAllPokemons(pokemons: Pokemon[]) {
 }
 
 function showSubMenu(pokemons: Pokemon[]) {
-    let subMenuOption = readline.keyInSelect(menuOptions,
-        "Welcome to the Pokémon JSON data viewer. Choose an option: ",{ cancel: false, guide: false });
-
-    while (subMenuOption !== 2) {
+    let subMenuOption: number;
+    do {
+        subMenuOption = readline.keyInSelect(menuOptions,
+            "Welcome to the Pokémon JSON data viewer. Choose an option: ",
+            { cancel: false, guide: false });
         switch (subMenuOption) {
             case 0:
                 ShowAllPokemons(pokemons);
@@ -58,11 +59,9 @@ function showSubMenu(pokemons: Pokemon[]) {
                 FilterPokemonsById(pokemons);
                 break;
         }
-        subMenuOption = readline.keyInSelect(menuOptions,
-            "Welcome to the Pokémon JSON data viewer. Choose an option: ",
-            { cancel: false, guide: false });
     }
-
+    while (subMenuOption !== 2);
+    console.log("Goodbye!");
 }
 
 fetchFromUrl();

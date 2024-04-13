@@ -10,49 +10,64 @@
   <script src="https://kit.fontawesome.com/cd8c9527e1.js" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="reset.css">
   <link rel="stylesheet" href="style.css">
+  <script defer src="pokemons.js"></script>
 </head>
 
 <body>
   <aside>
     <ul>
-      <li>Home</li>
-      <li>Pokémons</li>
-      <li>Moves</li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/">Pokémons</a></li>
+      <li><a href="/moves">Moves</a></li>
     </ul>
   </aside>
   <main>
-    <section class="input-group mb-3 mt-3">
-      <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
-      <input type="text" class="form-control" placeholder="Search for a pokémon" aria-label="pokemon" aria-describedby="basic-addon1">
-    </section>
-    <table class="table table-dark table-striped table-hover">
+    <form action="/" method="get">
+      <section class="input-group mb-3 mt-3">
+        <span class="input-group-text" id="basic-addon1"><i class="fa-solid fa-magnifying-glass"></i></span>
+        <input type="text" name="pokemon_name" class="form-control" placeholder="Search for a pokémon" aria-label="pokemon" aria-describedby="basic-addon1">
+      </section>
+    </form>
+
+    <table class="pokemons table table-dark table-striped table-hover caption-top">
+      <caption>Pokémon List</caption>
       <thead>
         <tr>
           <th scope="col">Image</th>
-          <th scope="col">Name <i class="fa-solid fa-sort"></i></th>
-          <th scope="col">BirthDate <i class="fa-solid fa-sort"></i></th>
+          <th scope="col">Name <a href="#" id="sortByName"><i class="fa-solid fa-sort"></i></a></th>
+          <th scope="col">BirthDate <a href="#" id="sortByBirthDate"><i class="fa-solid fa-sort"></i></a></th>
           <th scope="col">Type</th>
-          <th scope="col">Weigth(kg) <i class="fa-solid fa-sort"></i></th>
+          <th scope="col">Weigth(kg) <a href="#" id="sortByWeight"><i class="fa-solid fa-sort"></i></a></th>
           <th scope="col">Abilities</th>
-          <th scope="col">Move</th>
+          <th scope="col">Active</th>
+          <th scope="col">Actions</th>
         </tr>
       </thead>
       <tbody>
+        <% for(let i=0; i < pokemons.length; i++) { %>
         <tr>
-          <td><img src="Pikachu-dex.webp" alt=""></td>
-          <td>Pikachu</td>
-          <td>04/02/2022</td>
-          <td>Electric</td>
-          <td>50</td>
-          <td>
+          <td data-cell="Image"><img src="<%= pokemons[i].pokemon_url %>" alt=""></td>
+          <td data-cell="Name"><%= pokemons[i].pokemon_name %></td>
+          <td data-cell="BirthDate"><%= pokemons[i].pokemon_birthdate %></td>
+          <td data-cell="Type"><span style="background-color: <%= typeColors[pokemons[i].pokemon_type.toLowerCase()] %>"><%= pokemons[i].pokemon_type %></span></td>
+          <td data-cell="Weigth(kg)"><%= pokemons[i].pokemon_weight %></td>
+          <td data-cell="Abilities">
             <ul>
-              <li>Move1</li>
-              <li>Move2</li>
-              <li>Move3</li>
+              <% for (let j = 0; j < pokemons[i].pokemon_abilities.length; j++) { %>
+              <li><%= pokemons[i].pokemon_abilities[j] %></li>
+              <% } %>
             </ul>
           </td>
-          <td><a href="#">Move Naam</a></td>
+          <td data-cell="Active">
+            <% if (pokemons[i].is_pokemon_active) { %>
+            <i class="fa-solid fa-circle green"></i>
+            <% } else { %>
+            <i class="fa-solid fa-circle red"></i>
+            <% } %>
+          </td>
+          <td data-cell="Move"><a href="/pokemon/<%= pokemons[i].pokemon_id %>">View</a></td>
         </tr>
+        <% } %>
       </tbody>
     </table>
   </main>

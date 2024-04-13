@@ -87,9 +87,6 @@ table caption {
     vertical-align: middle;
 }
 
-
-
-
 .pokemons td:nth-child(6) ul {
     padding: 0;
     margin: 0;
@@ -134,4 +131,32 @@ table caption {
 
 .moves tr td {
     text-transform: capitalize;
+}
+
+
+
+@media (max-width: 971px) {
+    th{
+        display: none;
+    }
+    td{
+        display: block;
+    }    
+    td::before{
+        content: attr(data-cell) ": ";
+        font-weight: bold;
+        display: inline-flexbox;
+        justify-content: center;
+        align-items: center;
+    }
+
+    td:first-child{
+        padding-top: 2rem;
+    }
+    td:last-child{
+        padding-bottom: 2rem;
+    }
+    tr td:nth-child(8) {
+        border-bottom: 4px solid #fff;
+    }
 }

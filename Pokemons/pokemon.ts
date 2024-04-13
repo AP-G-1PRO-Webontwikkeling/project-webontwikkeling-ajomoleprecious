@@ -10,5 +10,5 @@ export interface Pokemon {
     pokemon_url: string;
     pokemon_type: string;
     pokemon_abilities: string[];
-    pokemon_moves: Move[];
+    pokemon_move: Move;
 }

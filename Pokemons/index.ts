@@ -26,7 +26,7 @@ function FilterPokemonsById(pokemons: Pokemon[]) {
         - Pokemon Image: ${pokemon.pokemon_url}\n
         - Pokemon Type: ${pokemon.pokemon_type}\n
         - Pokemon Abilities: ${pokemon.pokemon_abilities.join(", ")}\n
-        - Pokemon Moves: ${showMoves(pokemon.pokemon_moves)}\n`);
+        - Pokemon Move: ${pokemon.pokemon_move.move_name.charAt(0).toUpperCase()}${pokemon.pokemon_move.move_name.slice(1)}\n`);
         console.log(`${'-'.repeat(125)}\n`);
     } else {
         console.log(`\n${'-'.repeat(50)}`);
@@ -35,9 +35,6 @@ function FilterPokemonsById(pokemons: Pokemon[]) {
     }
 }
 
-function showMoves(moves: Move[]) {
-    return moves.map(move => `\n\t - ${move.move_name.toUpperCase()} (Accuracy: ${move.move_accuracy}) (Power: ${move.move_power})`).join("\n");
-}
 
 function ShowAllPokemons(pokemons: Pokemon[]) {
     pokemons.forEach(pokemon => {

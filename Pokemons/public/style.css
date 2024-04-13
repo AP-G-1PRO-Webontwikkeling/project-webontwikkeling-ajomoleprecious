@@ -1,0 +1,90 @@
+body {
+    display: grid;
+    grid-template-areas: "aside main";
+    grid-template-columns: 1fr 3fr;
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+
+aside {
+    grid-area: aside;
+    background-color: #f1f1f1;
+}
+
+main {
+    grid-area: main;
+}
+
+aside ul {
+    padding: 0;
+    margin: 1.5rem 0 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+aside ul li {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    list-style-type: none;
+    padding: .5rem;
+    cursor: pointer;
+    background-color: #ffde00;
+    width: 90%;
+    border-radius: 25px;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 1rem;
+}
+
+tr td img {
+    width: 70px;
+    height: 70px;
+    padding: .5rem;
+    border-radius: 50%;
+}
+
+td a {
+    color: white;
+    background-color: #3b4cca;
+    padding: .5rem;
+    border-radius: 25px;
+}
+
+td,
+th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+th:nth-child(2), th:nth-child(3), th:nth-child(5){
+    cursor: pointer;
+}
+
+
+td:nth-child(6) ul {
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+td:nth-child(6) li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffde00;
+    padding: .2rem;
+    border-radius: 15px;
+    font-size: .8rem;
+    width: 200px;
+    color: #000;
+}

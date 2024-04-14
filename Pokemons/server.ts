@@ -7,7 +7,6 @@ const app = express();
 app.set('port', process.env.PORT || 3000);
 
 app.use(express.static('public'));
-app.use(express.static('public', { extensions: ['html'] }));
 
 app.set('view engine', 'ejs');
 
@@ -36,58 +35,70 @@ const typeColors = {
 };
 
 app.get('/', (req, res) => {
-  let sortedPokemonData = pokemonData.slice();
+  let filteredPokemonData = pokemonData.slice();
 
+  // Filter by pokemon_name if provided
+  if (req.query.pokemon_name) {
+    const searchTerm = (req.query.pokemon_name as string).toLowerCase();
+    filteredPokemonData = filteredPokemonData.filter(pokemon => pokemon.pokemon_name.toLowerCase().includes(searchTerm));
+  }
+
+  // Sort the filtered data if sortBy parameter is provided
   if (req.query.sortBy === 'name') {
-    sortedPokemonData = sortedPokemonData.sort((a, b) => a.pokemon_name.localeCompare(b.pokemon_name));
-    res.render('index', { pageTitle: "Thuis", pokemons: sortedPokemonData, typeColors });
+    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_name', req.query.sortOrder as string);
   } else if (req.query.sortBy === 'birthdate') {
-    sortedPokemonData = sortedPokemonData.sort((a, b) => new Date(a.pokemon_birthdate).getTime() - new Date(b.pokemon_birthdate).getTime());
-    res.render('index', { pageTitle: "Thuis", pokemons: sortedPokemonData, typeColors });
+    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_birthdate', req.query.sortOrder as string);
   } else if (req.query.sortBy === 'weight') {
-    sortedPokemonData = sortedPokemonData.sort((a, b) => a.pokemon_weight - b.pokemon_weight);
-    res.render('index', { pageTitle: "Thuis", pokemons: sortedPokemonData, typeColors });
+    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_weight', req.query.sortOrder as string);
   }
-  else if(req.query.pokemon_name) {
-    const searchTerm = req.query.pokemon_name.toString().toLowerCase();
-    const filteredPokemonData = pokemonData.filter(pokemon => pokemon.pokemon_name.toLowerCase().includes(searchTerm));
-    res.render('index', { pageTitle: "Thuis", pokemons: filteredPokemonData, typeColors });
-  }
-  else {
-    res.render('index', { pageTitle: "Thuis", pokemons: pokemonData, typeColors });
-  }
+
+  res.render('index', { pageTitle: "Thuis", pokemons: filteredPokemonData, typeColors });
 });
 
-
-/*app.get('/pokemon/:id', (req, res) => {
-  const id = req.params.id;
-  const pokemon = pokemonData.find(pokemon => pokemon.pokemon_id === parseInt(id));
-  if (pokemon) {
-    res.render('pokemon', { pageTitle: pokemon.pokemon_name, pokemon });
-  } else {
-    res.status(404);
-    res.render('404', { pageTitle: "404 Not Found" });
-  }
-});*/
+// Function to sort Pokemon array based on a given property and sorting order
+function sortPokemon(pokemonArray: Pokemon[], sortBy: string, sortOrder: string): Pokemon[] {
+  return pokemonArray.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      if (sortBy === 'pokemon_birthdate') {
+        return new Date((a as any)[sortBy]).getTime() - new Date((b as any)[sortBy]).getTime();
+      } else {
+        return ((a as any)[sortBy] > (b as any)[sortBy]) ? 1 : -1;
+      }
+    } else {
+      if (sortBy === 'pokemon_birthdate') {
+        return new Date((b as any)[sortBy]).getTime() - new Date((a as any)[sortBy]).getTime();
+      } else {
+        return ((b as any)[sortBy] > (a as any)[sortBy]) ? 1 : -1;
+      }
+    }
+  });
+}
 
 const moveData: Move[] = [];
 app.get('/moves', (req, res) => {
   let sortedMoveData = moveData.slice();
 
   if (req.query.sortBy === 'name') {
-    sortedMoveData = sortedMoveData.sort((a, b) => a.move_name.localeCompare(b.move_name));
-    res.render('moves', { pageTitle: "Pokemon Moves", moves: sortedMoveData });
+    sortedMoveData = sortMoves(sortedMoveData, 'move_name', req.query.sortOrder as string);
   } else if (req.query.sortBy === 'accuracy') {
-    sortedMoveData = sortedMoveData.sort((a, b) => a.move_accuracy - b.move_accuracy);
-    res.render('moves', { pageTitle: "Pokemon Moves", moves: sortedMoveData });
+    sortedMoveData = sortMoves(sortedMoveData, 'move_accuracy', req.query.sortOrder as string);
   } else if (req.query.sortBy === 'power') {
-    sortedMoveData = sortedMoveData.sort((a, b) => a.move_power - b.move_power);
-    res.render('moves', { pageTitle: "Pokemon Moves", moves: sortedMoveData });
-  } else {
-    res.render('moves', { pageTitle: "Pokemon Moves", moves: moveData });
+    sortedMoveData = sortMoves(sortedMoveData, 'move_power', req.query.sortOrder as string);
   }
+
+  res.render('moves', { pageTitle: "Pokemon Moves", moves: sortedMoveData });
 });
 
+// Function to sort Moves array based on a given property and sorting order
+function sortMoves(moveArray: Move[], sortBy: string, sortOrder: string): Move[] {
+  return moveArray.sort((a, b) => {
+    if (sortOrder === 'asc') {
+      return (a as any)[sortBy] - (b as any)[sortBy];
+    } else {
+      return (b as any)[sortBy] - (a as any)[sortBy];
+    }
+  });
+}
 
 /* Als route niet bestaat */
 app.use((_, res) => {
@@ -99,15 +110,12 @@ app.listen(app.get('port'), async () => {
   try {
     const pokemonResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemons.json');
     const data = await pokemonResponse.json();
-    data.forEach((pokemon: Pokemon) => {
-      pokemonData.push(pokemon);
-    })
+    pokemonData.push(...data);
 
     const moveResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemon_moves.json');
     const movedata = await moveResponse.json();
-    movedata.forEach((move: Move) => {
-      moveData.push(move);
-    })
+    moveData.push(...movedata);
+    
   } catch (err) {
     console.error(`Error fetching Pokemon data: ${err}`);
   }

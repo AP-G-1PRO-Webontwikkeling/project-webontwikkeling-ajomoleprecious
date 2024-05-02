@@ -3,7 +3,7 @@
 body {
     display: grid;
     grid-template-areas: "aside main";
-    grid-template-columns: 1fr 8fr;
+    grid-template-columns: 10% auto;
     margin: 0;
     padding: 0;
     width: 100%;
@@ -158,5 +158,13 @@ table caption {
     }
     tr td:nth-child(8) {
         border-bottom: 4px solid #fff;
+    }
+
+    aside a{
+        font-size: 1rem;
+    }
+
+    body {
+        grid-template-columns: 30% auto;
     }
 }

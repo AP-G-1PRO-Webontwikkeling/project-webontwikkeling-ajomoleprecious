@@ -104,6 +104,16 @@ function sortMoves(moveArray: Move[], sortBy: string, sortOrder: string): Move[]
   });
 }
 
+app.get('/pokemon/:id', (req, res) => {
+  const pokemon = pokemonData.find(pokemon => pokemon.pokemon_id === parseInt(req.params.id));
+  if (pokemon) {
+    res.render('details', { pokemon });
+  } else {
+    res.status(404);
+    res.render('404', { pageTitle: "404 Not Found" });
+  }
+});
+
 /* Als route niet bestaat */
 app.use((_, res) => {
   res.status(404);

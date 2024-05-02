@@ -1,6 +1,9 @@
+import { ObjectId } from 'mongodb';
 import { Move } from './move';
 
+
 export interface Pokemon {
+    _id: ObjectId;
     pokemon_id: number;
     pokemon_name: string;
     pokemon_phrase: string;

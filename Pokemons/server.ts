@@ -1,6 +1,10 @@
 import express from 'express';
 import { Pokemon } from './pokemon';
 import { Move } from './move';
+import { MongoClient } from 'mongodb';
+
+const uri = "mongodb+srv://precious:Iamtheboss1973@cluster.lf7ccyg.mongodb.net/"; // Fill in your MongoDB connection string here
+const client = new MongoClient(uri);
 
 const app = express();
 
@@ -12,7 +16,7 @@ app.set('view engine', 'ejs');
 
 app.use(express.json({ limit: '1mb' }));
 
-const pokemonData: Pokemon[] = [];
+let pokemonData: Pokemon[] = [];
 const typeColors = {
   normal: "var(--normal)",
   fire: "var(--fire)",
@@ -74,7 +78,7 @@ function sortPokemon(pokemonArray: Pokemon[], sortBy: string, sortOrder: string)
   });
 }
 
-const moveData: Move[] = [];
+let moveData: Move[] = [];
 app.get('/moves', (req, res) => {
   let sortedMoveData = moveData.slice();
 
@@ -106,18 +110,40 @@ app.use((_, res) => {
   res.render('404', { pageTitle: "404 Not Found" });
 });
 
-app.listen(app.get('port'), async () => {
-  try {
-    const pokemonResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemons.json');
-    const data = await pokemonResponse.json();
-    pokemonData.push(...data);
 
-    const moveResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemon_moves.json');
-    const movedata = await moveResponse.json();
-    moveData.push(...movedata);
-    
+async function main() {
+  try {
+    await client.connect();
+    console.log("Connected to MongoDB");
+    const database = client.db("DB_Pokemons");
+    // check if the collection is empty
+    const pokemonsCheck = await database.collection("Pokemons").findOne({});
+
+    if (!pokemonsCheck) {
+      // fetch from api
+      const pokemonResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemons.json');
+      const pokemonsdata = await pokemonResponse.json();
+      pokemonData.push(...pokemonsdata);
+
+      const moveResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemon_moves.json');
+      const movesdata = await moveResponse.json();
+      moveData.push(...movesdata);
+
+      // insert into database
+      await database.collection("Pokemons").insertMany(pokemonsdata);
+      await database.collection("Moves").insertMany(movesdata);
+    }
+    else {
+      // fetch from database
+      pokemonData = await database.collection("Pokemons").find<Pokemon>({}).toArray();
+      moveData = await database.collection("Moves").find<Move>({}).toArray();
+    }
+    app.listen(app.get('port'), async () => {
+      console.log(`Server is running at http://localhost:${app.get('port')}`);
+    }
+    );
   } catch (err) {
-    console.error(`Error fetching Pokemon data: ${err}`);
+    console.error(err);
   }
-  console.log(`Server running on port ${app.get('port')}`);
-});
+}
+main();

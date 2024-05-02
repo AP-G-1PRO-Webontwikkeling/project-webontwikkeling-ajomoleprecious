@@ -118,6 +118,7 @@ async function main() {
     const database = client.db("DB_Pokemons");
     // check if the collection is empty
     const pokemonsCheck = await database.collection("Pokemons").findOne({});
+    const movesCheck = await database.collection("Moves").findOne({});
 
     if (!pokemonsCheck) {
       // fetch from api
@@ -125,19 +126,23 @@ async function main() {
       const pokemonsdata = await pokemonResponse.json();
       pokemonData.push(...pokemonsdata);
 
+      await database.collection("Pokemons").insertMany(pokemonsdata);
+    }
+
+    if (!movesCheck) {
+
       const moveResponse = await fetch('https://raw.githubusercontent.com/ajomoleprecious/filesForWebOntw/main/Pokemon_moves.json');
       const movesdata = await moveResponse.json();
       moveData.push(...movesdata);
 
       // insert into database
-      await database.collection("Pokemons").insertMany(pokemonsdata);
       await database.collection("Moves").insertMany(movesdata);
     }
-    else {
-      // fetch from database
-      pokemonData = await database.collection("Pokemons").find<Pokemon>({}).toArray();
-      moveData = await database.collection("Moves").find<Move>({}).toArray();
-    }
+
+    // fetch from database
+    pokemonData = await database.collection("Pokemons").find<Pokemon>({}).toArray();
+    moveData = await database.collection("Moves").find<Move>({}).toArray();
+
     app.listen(app.get('port'), async () => {
       console.log(`Server is running at http://localhost:${app.get('port')}`);
     }

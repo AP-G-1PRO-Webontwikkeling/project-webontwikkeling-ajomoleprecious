@@ -4,41 +4,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= pokemon.pokemon_name %></title>
+    <title>
+        <%= pokemon.pokemon_name %>
+    </title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="../reset.css">
-    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="/reset.css">
+    <link rel="stylesheet" href="/style.css">
 </head>
 
-<body>
+<body id="detailBody">
     <div class="modal fade" id="modalDetail" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title"><%= pokemon.pokemon_name %></h5>
+                    <h5 class="modal-title">
+                        <%= pokemon.pokemon_name %>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-6">
+                    <div class="col">
+                        <div class="col">
                             <img src="<%= pokemon.pokemon_url %>" alt="<%= pokemon.pokemon_name %>"
                                 class="img-fluid rounded">
                         </div>
-                        <div class="col-6">
-                            <p><strong>Height:</strong> <%= pokemon.pokemon_height %></p>
-                            <p><strong>Weight:</strong> <%= pokemon.pokemon_weight %></p>
-                            <p><strong>Types:</strong></p>
+                        <div class="row row-cols-2">
+                            <div class="col">
+                                <section class="mb-2">
+                                    <label for="name" class="form-label">Name:</label>
+                                    <input type="text" name="name" class="form-control" id="name"
+                                        placeholder="pokemon_name" required readonly
+                                        value="<%= pokemon.pokemon_name %>">
+                                </section>
+                                <section class="mb-2">
+                                    <label for="type" class="form-label">Type:</label>
+                                    <input type="text" name="type" class="form-control" id="type"
+                                        placeholder="pokemon_type" required readonly
+                                        value="<%= pokemon.pokemon_type %>">
+                                </section>
+                                <section class="mb-2">
+                                    <label for="image" class="form-label">Image:</label>
+                                    <input type="text" name="image" class="form-control" id="image"
+                                        placeholder="pokemon_image" required readonly
+                                        value="<%= pokemon.pokemon_url %>">
+                                </section>
+                                <section class="mb-2">
+                                    <label for="weight" class="form-label">Weight:</label>
+                                    <input type="text" name="weight" class="form-control" id="weight"
+                                        placeholder="pokemon_weight" required readonly
+                                        value="<%= pokemon.pokemon_weight %>">
+                                </section>
+                            </div>
+                            <div class="col">
+                                <section class="mb-2">
+                                    <label for="ability" class="form-label">Abilities:</label>
+                                    <% for (var i=0; i < pokemon.pokemon_abilities.length; i++) { %> <input type="text"
+                                            name="ability" class="form-control" id="ability"
+                                            placeholder="pokemon_ability" required readonly
+                                            value="<%= pokemon.pokemon_abilities[i] %>">
+                                        <% } %>
+                                </section>
+                                <section class="mb-2">
+                                    <label for="birthday" class="form-label">Birthday:</label>
+                                    <input type="text" name="birthday" class="form-control" id="birthday"
+                                        placeholder="pokemon_birthday" required readonly
+                                        value="<%= pokemon.pokemon_birthdate %>">
+                                </section>
+                                <section class="mb-2">
+                                    <label for="active" class="form-label">Active:</label>
+                                    <select class="form-select" id="active" name="active" required disabled>
+                                        <option value="true" <% if (pokemon.is_pokemon_active==true) { %> selected <% }
+                                                %>
+                                                >Active</option>
+                                        <option value="false" <% if (pokemon.is_pokemon_active==false) { %> selected <%
+                                                } %>
+                                                >Inactive</option>
+                                    </select>
+                                </section>
+                                <section class="mb-2">
+                                    <label for="phrase" class="form-label">Phrase:</label>
+                                    <textarea type="text" name="phrase" class="form-control" id="phrase"
+                                        placeholder="pokemon_phrase" required
+                                        readonly><%= pokemon.pokemon_phrase %></textarea>
+                                </section>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
+                <!-- <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

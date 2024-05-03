@@ -10,13 +10,17 @@ const app = express();
 
 app.set('port', process.env.PORT || 3000);
 
-app.use(express.static('public'));
+
 
 app.set('view engine', 'ejs');
-
+app.use(express.static('public'));
 app.use(express.json({ limit: '1mb' }));
+app.use(express.urlencoded({ extended: true }));
 
+let moveData: Move[] = [];
 let pokemonData: Pokemon[] = [];
+
+
 const typeColors = {
   normal: "var(--normal)",
   fire: "var(--fire)",
@@ -78,7 +82,6 @@ function sortPokemon(pokemonArray: Pokemon[], sortBy: string, sortOrder: string)
   });
 }
 
-let moveData: Move[] = [];
 app.get('/moves', (req, res) => {
   let sortedMoveData = moveData.slice();
 
@@ -114,12 +117,59 @@ app.get('/pokemon/:id', (req, res) => {
   }
 });
 
+app.get('/moves/:id', (req, res) => {
+  const move = moveData.find(move => move.move_id === parseInt(req.params.id));
+  if (move) {
+    res.render('moveDetails', { move });
+  } else {
+    res.status(404);
+    res.render('404', { pageTitle: "404 Not Found" });
+  }
+});
+
+app.get('/pokemon/:id/edit', (req, res) => {
+  const pokemon = pokemonData.find(pokemon => pokemon.pokemon_id === parseInt(req.params.id));
+  if (pokemon) {
+    res.render('edit', { pokemon });
+  } else {
+    res.status(404);
+    res.render('404', { pageTitle: "404 Not Found" });
+  }
+});
+
+app.post('/pokemon/:id/edit', async (req, res) => {
+  const pokemon = pokemonData.find(pokemon => pokemon.pokemon_id === parseInt(req.params.id));
+  if (!pokemon) {
+    return res.status(404).send('Pokemon not found');
+  }
+  const { name, type, image, weight, active, phrase } = req.body;
+
+  await client.db("DB_Pokemons").collection("Pokemons").updateOne(
+    { pokemon_id: pokemon.pokemon_id },
+    {
+      $set: {
+        pokemon_name: name,
+        pokemon_type: type,
+        pokemon_url: image,
+        pokemon_weight: weight,
+        is_pokemon_active: active.toLowerCase() === 'true' ? true : false,
+        pokemon_phrase: phrase
+      }
+    }
+  );
+
+  pokemonData = [];
+
+  pokemonData = await client.db("DB_Pokemons").collection("Pokemons").find<Pokemon>({}).toArray();
+
+  res.redirect(`/pokemon/${pokemon.pokemon_id}`);
+});
+
 /* Als route niet bestaat */
 app.use((_, res) => {
   res.status(404);
   res.render('404', { pageTitle: "404 Not Found" });
 });
-
 
 async function main() {
   try {

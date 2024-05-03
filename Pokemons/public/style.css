@@ -133,6 +133,39 @@ table caption {
     text-transform: capitalize;
 }
 
+#modalDetail .modal-content{
+    background-color: beige;
+    color: black;
+    border-radius: 25px;
+}
+
+#modalDetail img{
+    width: 15rem;
+}
+
+#modalDetail .modal-body .col{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+}
+
+#modalDetail .modal-body section{
+    width: 100%;
+}
+
+#modalDetail .modal-body .row{
+    align-items: start;
+    justify-content: start;
+    flex-wrap: nowrap;
+}
+
+#detailBody {
+    background-image: url(pokemon.gif);
+    background-repeat: no-repeat;
+    background-size: cover;
+}
 
 
 @media (max-width: 971px) {

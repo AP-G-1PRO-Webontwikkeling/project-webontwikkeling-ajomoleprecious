@@ -23,5 +23,5 @@
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
 	// Use 'postStartCommand' to run commands after the container is started.
-	"postStartCommand": "cd Pokemons/ && yarn install && git pull origin main"
+	"postStartCommand": "cd Pokemons/ && git pull origin main && npm install "
 }

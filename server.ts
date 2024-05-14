@@ -2,14 +2,14 @@ import express from 'express';
 import { Pokemon } from './pokemon';
 import { Move } from './move';
 import { MongoClient } from 'mongodb';
-
-const uri = "mongodb+srv://precious:Iamtheboss1973@cluster.lf7ccyg.mongodb.net/"; // Fill in your MongoDB connection string here
-const client = new MongoClient(uri);
+import dotenv from 'dotenv';
+dotenv.config();
+const uri = process.env.MONGODB_URI; // Fill in your MongoDB connection string here
+const client = new MongoClient(uri as string);
 
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
-
 
 
 app.set('view engine', 'ejs');

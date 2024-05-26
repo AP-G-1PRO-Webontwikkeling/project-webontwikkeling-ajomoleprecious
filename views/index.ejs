@@ -31,7 +31,7 @@
         <tr>
           <th scope="col">Image</th>
           <th scope="col" id="sortByName">Name <a href="#"><i class="fa-solid fa-sort"></i></a></th>
-          <th scope="col" id="sortByBirthDate">BirthDate <a href="#" ><i class="fa-solid fa-sort"></i></a></th>
+          <th scope="col" id="sortByBirthDate">BirthDate <a href="#"><i class="fa-solid fa-sort"></i></a></th>
           <th scope="col">Type</th>
           <th scope="col" id="sortByWeight">Weigth(kg) <a href="#"><i class="fa-solid fa-sort"></i></a></th>
           <th scope="col">Abilities</th>
@@ -62,8 +62,10 @@
             <% } %>
           </td>
           <td data-cell="Actions">
-          <a href="/pokemon/<%= pokemons[i].pokemon_id %>">View</a>
-          <a href="/pokemon/<%= pokemons[i].pokemon_id %>/edit">Edit</a>
+            <a href="/pokemon/<%= pokemons[i].pokemon_id %>">View</a>
+            <% if (userRole === 'ADMIN') { %>
+            <a href="/pokemon/<%= pokemons[i].pokemon_id %>/edit">Edit</a>
+            <% } %>
           </td>
         </tr>
         <% } %>

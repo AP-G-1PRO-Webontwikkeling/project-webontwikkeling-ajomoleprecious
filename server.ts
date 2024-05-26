@@ -73,7 +73,9 @@ app.get('/', secureMiddleware, (req, res) => {
     sortData(filteredPokemonData, 'pokemon_weight', req.query.weightSort);
   }
 
-  res.render('index', { pageTitle: "Thuis", pokemons: filteredPokemonData, typeColors });
+  const userRole = req.session.user?.role;
+
+  res.render('index', { pageTitle: "Thuis", pokemons: filteredPokemonData, typeColors, userRole });
 });
 
 app.get('/moves', secureMiddleware, (req, res) => {

@@ -44,6 +44,13 @@ aside ul li {
     margin: 0 1rem;
 }
 
+.logout {
+    background-color: #f00;
+}
+.logout a{
+    color: beige;
+}
+
 aside ul li a {
     text-decoration: none;
     color: #000;
@@ -133,17 +140,17 @@ table caption {
     text-transform: capitalize;
 }
 
-#modalDetail .modal-content{
+#modalDetail .modal-content {
     background-color: beige;
     color: black;
     border-radius: 25px;
 }
 
-#modalDetail img{
+#modalDetail img {
     width: 15rem;
 }
 
-#modalDetail .modal-body .col{
+#modalDetail .modal-body .col {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -151,11 +158,11 @@ table caption {
     gap: .5rem;
 }
 
-#modalDetail .modal-body section{
+#modalDetail .modal-body section {
     width: 100%;
 }
 
-#modalDetail .modal-body .row{
+#modalDetail .modal-body .row {
     align-items: start;
     justify-content: start;
     flex-wrap: nowrap;
@@ -169,13 +176,15 @@ table caption {
 
 
 @media (max-width: 971px) {
-    th{
+    th {
         display: none;
     }
-    td{
+
+    td {
         display: block;
-    }    
-    td::before{
+    }
+
+    td::before {
         content: attr(data-cell) ": ";
         font-weight: bold;
         display: inline-flexbox;
@@ -183,17 +192,19 @@ table caption {
         align-items: center;
     }
 
-    td:first-child{
+    td:first-child {
         padding-top: 2rem;
     }
-    td:last-child{
+
+    td:last-child {
         padding-bottom: 2rem;
     }
+
     tr td:nth-child(8) {
         border-bottom: 4px solid #fff;
     }
 
-    aside a{
+    aside a {
         font-size: 1rem;
     }
 

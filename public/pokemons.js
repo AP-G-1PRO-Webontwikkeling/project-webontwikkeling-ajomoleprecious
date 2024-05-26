@@ -1,64 +1,37 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const sortByBirthDateLink = document.getElementById('sortByBirthDate');
-  const sortByWeightLink = document.getElementById('sortByWeight');
-  const sortByNameLink = document.getElementById('sortByName');
-  const sortByMoveName = document.getElementById('sortByMoveName');
-  const sortByMoveAccuracy = document.getElementById('sortByMoveAccuracy');
-  const sortByMovePower = document.getElementById('sortByMovePower');
+const sortByName = document.getElementById('sortByName');
+const sortByBirthdate = document.getElementById('sortByBirthDate');
+const sortByWeight = document.getElementById('sortByWeight');
 
-  sortByBirthDateLink.addEventListener('click', function(event) {
-      event.preventDefault();
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      params.set('sortBy', 'birthdate');
-      params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-      window.location.href = '/?' + params.toString();
-  });
-
-  sortByWeightLink.addEventListener('click', function(event) {
-      event.preventDefault();
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      params.set('sortBy', 'weight');
-      params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-      window.location.href = '/?' + params.toString();
-  });
-
-  sortByNameLink.addEventListener('click', function(event) {
-      event.preventDefault();
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      params.set('sortBy', 'name');
-      params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-      window.location.href = '/?' + params.toString();
-  });
-
-  sortByMoveName.addEventListener('click', function(event) {
-    event.preventDefault();
-      const url = new URL(window.location.href);
-      const params = new URLSearchParams(url.search);
-      params.set('sortBy', 'name');
-      params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-      window.location.href = '/?' + params.toString();
-  });
-  sortByMoveAccuracy.addEventListener('click', function(event) {
-    event.preventDefault();
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    params.set('sortBy', 'accuracy');;
-    params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-    window.location.href = '/?' + params.toString();
-  });
-  sortByMovePower.addEventListener('click', function(event) {
-    event.preventDefault();
-    const url = new URL(window.location.href);
-    const params = new URLSearchParams(url.search);
-    params.set('sortBy', 'power');
-    params.set('sortOrder', toggleSortOrder(params.get('sortOrder')));
-    window.location.href = '/?' + params.toString();
-  });
-
-  function toggleSortOrder(currentOrder) {
-      return currentOrder === 'asc' ? 'desc' : 'asc';
+sortByName.addEventListener('click', () => {
+  // add to url params for sortByName asc or desc
+  const url = new URL(window.location);
+  const asc = url.searchParams.get('nameSort');
+  if (asc === 'asc') {
+    url.searchParams.set('nameSort', 'desc');
+  } else {
+    url.searchParams.set('nameSort', 'asc');
   }
+  window.location = url.toString();
+});
+
+sortByBirthdate.addEventListener('click', () => {
+  const url = new URL(window.location);
+  const asc = url.searchParams.get('birthdateSort');
+  if (asc === 'asc') {
+    url.searchParams.set('birthdateSort', 'desc');
+  } else {
+    url.searchParams.set('birthdateSort', 'asc');
+  }
+  window.location = url.toString();
+});
+
+sortByWeight.addEventListener('click', () => {
+  const url = new URL(window.location);
+  const asc = url.searchParams.get('weightSort');
+  if (asc === 'asc') {
+    url.searchParams.set('weightSort', 'desc');
+  } else {
+    url.searchParams.set('weightSort', 'asc');
+  }
+  window.location = url.toString();
 });

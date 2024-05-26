@@ -29,48 +29,53 @@
               <div class="col">
                 <img src="<%= pokemon.pokemon_url %>" alt="<%= pokemon.pokemon_name %>" class="img-fluid rounded">
               </div>
-              <div class="col">
-                <section class="mb-2">
-                  <label for="name" class="form-label">Name:</label>
-                  <input type="text" name="name" class="form-control" id="name" placeholder="pokemon_name" required value="<%= pokemon.pokemon_name %>">
-                </section>
-                <section class="mb-2">
-                  <label for="type" class="form-label">Type:</label>
-                  <input type="text" name="type" class="form-control" id="type" placeholder="pokemon_type" required value="<%= pokemon.pokemon_type %>">
-                </section>
-                <section class="mb-2">
-                  <label for="image" class="form-label">Image:</label>
-                  <input type="text" name="image" class="form-control" id="image" placeholder="pokemon_image" required value="<%= pokemon.pokemon_url %>">
-                </section>
-                <section class="mb-2">
-                  <label for="weight" class="form-label">Weight:</label>
-                  <input type="text" name="weight" class="form-control" id="weight" placeholder="pokemon_weight" required value="<%= pokemon.pokemon_weight %>">
-                </section>
-                <section class="mb-2">
-                  <label for="ability" class="form-label">Abilities:</label>
-                  <% for (var i=0; i < pokemon.pokemon_abilities.length; i++) { %> <input type="text" name="ability" class="form-control" id="ability" placeholder="pokemon_ability" required disabled value="<%= pokemon.pokemon_abilities[i] %>">
-                  <% } %>
-                </section>
-                <section class="mb-2">
-                  <label for="birthday" class="form-label">Birthday:</label>
-                  <input type="text" name="birthday" class="form-control" id="birthday" placeholder="pokemon_birthday" required disabled value="<%= pokemon.pokemon_birthdate %>">
-                </section>
-                <section class="mb-2">
-                  <label for="active" class="form-label">Active:</label>
-                  <select class="form-select" id="active" name="active" required>
-                    <option value="true" <% if (pokemon.is_pokemon_active==true) { %> selected <% } %>>Active
-                    </option>
-                    <option value="false" <% if (pokemon.is_pokemon_active==false) { %> selected <% } %>>Inactive
-                    </option>
-                  </select>
-                </section>
-                <section class="mb-2">
-                  <label for="phrase" class="form-label">Phrase:</label>
-                  <textarea type="text" name="phrase" class="form-control" id="phrase" placeholder="pokemon_phrase" required><%= pokemon.pokemon_phrase %></textarea>
-                </section>
-                <section class="mb-2">
-                  <button type="submit" class="btn btn-primary">Save</button>
-                </section>
+              <div class="row row-cols-2">
+                <div class="col">
+                  <section class="mb-2">
+                    <label for="name" class="form-label">Name:</label>
+                    <input type="text" name="name" class="form-control" id="name" placeholder="pokemon_name" required value="<%= pokemon.pokemon_name %>">
+                  </section>
+                  <section class="mb-2">
+                    <label for="type" class="form-label">Type:</label>
+                    <input type="text" name="type" class="form-control" id="type" placeholder="pokemon_type" disabled value="<%= pokemon.pokemon_type %>">
+                  </section>
+                  <section class="mb-2">
+                    <label for="image" class="form-label">Image:</label>
+                    <input type="text" name="image" class="form-control" id="image" placeholder="pokemon_image" required value="<%= pokemon.pokemon_url %>">
+                  </section>
+                  <section class="mb-2">
+                    <label for="weight" class="form-label">Weight:</label>
+                    <input type="text" name="weight" class="form-control" id="weight" placeholder="pokemon_weight" required value="<%= pokemon.pokemon_weight %>">
+                  </section>
+                </div>
+                <div class="col">
+                  <section class="mb-2">
+                    <label for="ability" class="form-label">Abilities:</label>
+                    <% for (var i=0; i < pokemon.pokemon_abilities.length; i++) { %> <input type="text" name="ability" class="form-control" id="ability" placeholder="pokemon_ability" required disabled value="<%= pokemon.pokemon_abilities[i] %>">
+                    <% } %>
+                  </section>
+                  <section class="mb-2">
+                    <label for="birthday" class="form-label">Birthday:</label>
+                    <input type="text" name="birthday" class="form-control" id="birthday" placeholder="pokemon_birthday" required disabled value="<%= pokemon.pokemon_birthdate %>">
+                  </section>
+                  <section class="mb-2">
+                    <label for="active" class="form-label">Active:</label>
+                    <select class="form-select" id="active" name="active" required>
+                      <option value="true" <% if (pokemon.is_pokemon_active==true) { %> selected <% } %>>Active
+                      </option>
+                      <option value="false" <% if (pokemon.is_pokemon_active==false) { %> selected <% } %>>Inactive
+                      </option>
+                    </select>
+                  </section>
+                  <section class="mb-2">
+                    <label for="phrase" class="form-label">Phrase:</label>
+                    <textarea type="text" name="phrase" class="form-control" id="phrase" placeholder="pokemon_phrase" required><%= pokemon.pokemon_phrase %></textarea>
+                  </section>
+                  <section class="mb-2">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="/pokemon/<%= pokemon.pokemon_id %>" class="btn btn-secondary">Cancel</a>
+                  </section>
+                </div>
               </div>
             </div>
           </div>

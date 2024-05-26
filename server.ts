@@ -3,9 +3,14 @@ import { Pokemon } from './pokemon';
 import { Move } from './move';
 import { MongoClient } from 'mongodb';
 import dotenv from 'dotenv';
+import session from './session';
+import { connect, login } from "./database";
+import { User } from './types';
+
+
 dotenv.config();
 const uri = process.env.MONGODB_URI; // Fill in your MongoDB connection string here
-const client = new MongoClient(uri as string);
+export const client = new MongoClient(uri as string);
 
 const app = express();
 
@@ -16,6 +21,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 app.use(express.json({ limit: '1mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(session);
 
 let moveData: Move[] = [];
 let pokemonData: Pokemon[] = [];
@@ -41,71 +47,53 @@ const typeColors = {
   steel: "var(--steel)",
   fairy: "var(--fairy)"
 };
+// Helper function
+function sortData(data : any, sortBy : any, order : any) {
+  const compare = (a : any, b : any) => {
+    if (a[sortBy] < b[sortBy]) return order === 'desc' ? 1 : -1;
+    if (a[sortBy] > b[sortBy]) return order === 'desc' ? -1 : 1;
+    return 0;
+  };
+  data.sort(compare);
+}
 
 app.get('/', (req, res) => {
-  let filteredPokemonData = pokemonData.slice();
-
-  // Filter by pokemon_name if provided
+  let filteredPokemonData = pokemonData;
+  const searchName = req.query.pokemon_name as string;
   if (req.query.pokemon_name) {
-    const searchTerm = (req.query.pokemon_name as string).toLowerCase();
-    filteredPokemonData = filteredPokemonData.filter(pokemon => pokemon.pokemon_name.toLowerCase().includes(searchTerm));
+    filteredPokemonData = filteredPokemonData.filter(pokemon => pokemon.pokemon_name.toLowerCase().includes(searchName?.toLowerCase()));
   }
-
-  // Sort the filtered data if sortBy parameter is provided
-  if (req.query.sortBy === 'name') {
-    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_name', req.query.sortOrder as string);
-  } else if (req.query.sortBy === 'birthdate') {
-    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_birthdate', req.query.sortOrder as string);
-  } else if (req.query.sortBy === 'weight') {
-    filteredPokemonData = sortPokemon(filteredPokemonData, 'pokemon_weight', req.query.sortOrder as string);
+  if (req.query.nameSort) {
+    sortData(filteredPokemonData, 'pokemon_name', req.query.nameSort);
+  }
+  if (req.query.birthdateSort) {
+    sortData(filteredPokemonData, 'pokemon_birthdate', req.query.birthdateSort);
+  }
+  if (req.query.weightSort) {
+    sortData(filteredPokemonData, 'pokemon_weight', req.query.weightSort);
   }
 
   res.render('index', { pageTitle: "Thuis", pokemons: filteredPokemonData, typeColors });
 });
 
-// Function to sort Pokemon array based on a given property and sorting order
-function sortPokemon(pokemonArray: Pokemon[], sortBy: string, sortOrder: string): Pokemon[] {
-  return pokemonArray.sort((a, b) => {
-    if (sortOrder === 'asc') {
-      if (sortBy === 'pokemon_birthdate') {
-        return new Date((a as any)[sortBy]).getTime() - new Date((b as any)[sortBy]).getTime();
-      } else {
-        return ((a as any)[sortBy] > (b as any)[sortBy]) ? 1 : -1;
-      }
-    } else {
-      if (sortBy === 'pokemon_birthdate') {
-        return new Date((b as any)[sortBy]).getTime() - new Date((a as any)[sortBy]).getTime();
-      } else {
-        return ((b as any)[sortBy] > (a as any)[sortBy]) ? 1 : -1;
-      }
-    }
-  });
-}
-
 app.get('/moves', (req, res) => {
-  let sortedMoveData = moveData.slice();
-
-  if (req.query.sortBy === 'name') {
-    sortedMoveData = sortMoves(sortedMoveData, 'move_name', req.query.sortOrder as string);
-  } else if (req.query.sortBy === 'accuracy') {
-    sortedMoveData = sortMoves(sortedMoveData, 'move_accuracy', req.query.sortOrder as string);
-  } else if (req.query.sortBy === 'power') {
-    sortedMoveData = sortMoves(sortedMoveData, 'move_power', req.query.sortOrder as string);
+  let sortedMoveData = moveData;
+  const searchName = req.query.move_name as string;
+  if (req.query.move_name) {
+    sortedMoveData = sortedMoveData.filter(move => move.move_name.toLowerCase().includes(searchName?.toLowerCase()));
+  }
+  if (req.query.nameSort) {
+    sortData(sortedMoveData, 'move_name', req.query.nameSort);
+  }
+  if (req.query.accuracySort) {
+    sortData(sortedMoveData, 'move_accuracy', req.query.accuracySort);
+  }
+  if (req.query.powerSort) {
+    sortData(sortedMoveData, 'move_power', req.query.powerSort);
   }
 
   res.render('moves', { pageTitle: "Pokemon Moves", moves: sortedMoveData });
 });
-
-// Function to sort Moves array based on a given property and sorting order
-function sortMoves(moveArray: Move[], sortBy: string, sortOrder: string): Move[] {
-  return moveArray.sort((a, b) => {
-    if (sortOrder === 'asc') {
-      return (a as any)[sortBy] - (b as any)[sortBy];
-    } else {
-      return (b as any)[sortBy] - (a as any)[sortBy];
-    }
-  });
-}
 
 app.get('/pokemon/:id', (req, res) => {
   const pokemon = pokemonData.find(pokemon => pokemon.pokemon_id === parseInt(req.params.id));
@@ -165,6 +153,27 @@ app.post('/pokemon/:id/edit', async (req, res) => {
   res.redirect(`/pokemon/${pokemon.pokemon_id}`);
 });
 
+app.get('/login', (req, res) => {
+  res.render('login', { pageTitle: "Login" });
+});
+
+app.post("/login", async(req, res) => {
+  const email : string = req.body.email;
+  const password : string = req.body.password;
+  try {
+      let user : User = await login(email, password);
+      delete user.password; 
+      req.session.user = user;
+      res.redirect("/")
+  } catch (e : any) {
+      res.redirect("/login");
+  }
+});
+
+app.get('/register', (req, res) => {
+  res.render('register', { pageTitle: "Register" });
+});
+
 /* Als route niet bestaat */
 app.use((_, res) => {
   res.status(404);
@@ -173,7 +182,10 @@ app.use((_, res) => {
 
 async function main() {
   try {
-    await client.connect();
+    app.listen(app.get('port'), async () => {
+      console.log(`Server is running at http://localhost:${app.get('port')}`);
+    });
+    await connect();
     console.log("Connected to MongoDB");
     const database = client.db("DB_Pokemons");
     // check if the collection is empty
@@ -202,11 +214,6 @@ async function main() {
     // fetch from database
     pokemonData = await database.collection("Pokemons").find<Pokemon>({}).toArray();
     moveData = await database.collection("Moves").find<Move>({}).toArray();
-
-    app.listen(app.get('port'), async () => {
-      console.log(`Server is running at http://localhost:${app.get('port')}`);
-    }
-    );
   } catch (err) {
     console.error(err);
   }

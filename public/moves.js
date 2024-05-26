@@ -1,29 +1,36 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const sortByNameLink = document.querySelector('#sortByName');
-    const sortByAccuracyLink = document.querySelector('#sortByAccuracy');
-    const sortByPowerLink = document.querySelector('#sortByPower');
+const sortByName = document.getElementById('sortByMoveName');
+const sortByAccuracy = document.getElementById('sortByMoveAccuracy');
+const sortByPower = document.getElementById('sortByMovePower');
 
-    sortByNameLink.addEventListener('click', function (event) {
-        event.preventDefault();
-        const url = new URL(window.location.href);
-        const params = new URLSearchParams(url.search);
-        params.set('sortBy', 'name');
-        window.location.href = '/moves?' + params.toString();
-    });
+sortByName.addEventListener('click', () => {
+    const url = new URL(window.location);
+    const asc = url.searchParams.get('nameSort');
+    if (asc === 'asc') {
+        url.searchParams.set('nameSort', 'desc');
+    } else {
+        url.searchParams.set('nameSort', 'asc');
+    }
+    window.location = url.toString();
+});
 
-    sortByAccuracyLink.addEventListener('click', function (event) {
-        event.preventDefault();
-        const url = new URL(window.location.href);
-        const params = new URLSearchParams(url.search);
-        params.set('sortBy', 'accuracy');
-        window.location.href = '/moves?' + params.toString();
-    });
+sortByAccuracy.addEventListener('click', () => {
+    const url = new URL(window.location);
+    const asc = url.searchParams.get('accuracySort');
+    if (asc === 'asc') {
+        url.searchParams.set('accuracySort', 'desc');
+    } else {
+        url.searchParams.set('accuracySort', 'asc');
+    }
+    window.location = url.toString();
+});
 
-    sortByPowerLink.addEventListener('click', function (event) {
-        event.preventDefault();
-        const url = new URL(window.location.href);
-        const params = new URLSearchParams(url.search);
-        params.set('sortBy', 'power');
-        window.location.href = '/moves?' + params.toString();
-    });
+sortByPower.addEventListener('click', () => {
+    const url = new URL(window.location);
+    const asc = url.searchParams.get('powerSort');
+    if (asc === 'asc') {
+        url.searchParams.set('powerSort', 'desc');
+    } else {
+        url.searchParams.set('powerSort', 'asc');
+    }
+    window.location = url.toString();
 });
